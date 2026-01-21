@@ -1,0 +1,14 @@
+<h1><%= post.title %></h1>
+<p><%= post.content %></p>
+    
+<!-- 삭제 폼 post 배열 자체를 받으니까 해당 id접근 가능--> 
+<form action="/posts/<%= post.post_num %>/delete" method="POST">
+  <button type="submit">삭제</button>
+</form>
+
+<!-- 수정 페이지 이동-->
+<a href="/posts/<%= post.post_num %>/edit">수정</a>
+
+<!-- 글 목록 페이지로 이동-->
+<a href="/posts">목록으로 돌아가기</a>
+

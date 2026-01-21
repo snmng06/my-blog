@@ -1,0 +1,6 @@
+ <form action="/posts/<%= post.post_num %>/edit" method="POST">
+    <h1>게시글 수정하기</h1>
+    <input name = "title" value="<%= post.title %>"/>
+    <textarea name ="content"><%= post.content %></textarea>
+    <button type="submit">수정하기</button>
+</form>

@@ -1,0 +1,12 @@
+<h1>Login</h1>
+<% if(error) { %>
+<script>alert(error)</script>
+<% }%>
+<form action="/auth/login" method="POST">
+    <label>이메일</label>
+    <input type="email" name="email">
+    <label>비밀번호</label>
+    <input name ="password"/>
+    <button>로그인하기</button>
+</form>
+ <a href="/auth/signup">회원가입</a>

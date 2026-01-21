@@ -1,0 +1,24 @@
+<h1>글 목록</h1>
+<ul>
+  <% posts.forEach(post => { %>
+    <li>
+      <!-- 각 글의 id로 상세 페이지 이동 -->
+      <a href="/posts/<%= post.post_num %>">
+        <%= post.title %>
+      </a>
+    </li>
+  <% }) %>
+</ul>
+
+<!-- 로그인 페이지 이동-->
+<% if (userId) { %>
+  <form action="/auth/logout" method="POST">
+    <button type="submit">로그아웃</button>
+  </form>
+<% } %>
+<!-- 로그아웃 -->
+ <% if (!userId) { %>
+  <a href="/auth/login">로그인</a>
+<% } %>
+
+

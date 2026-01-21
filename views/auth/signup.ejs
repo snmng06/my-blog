@@ -1,0 +1,13 @@
+<h1>회원가입</h1>
+<% if(error) { %>
+<script>alert("이미 가입된 이메일 입니다.")</script>
+<% }%>
+<form action="/auth/signup" method="POST">
+    <label>이름</label>
+    <input name = "name"/>
+    <label>이메일</label>
+    <input type="email" name="email">
+    <label>비밀번호</label>
+    <input name ="password"/>
+    <button>회원가입하기</button>
+</form>

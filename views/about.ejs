@@ -1,0 +1,14 @@
+<h1>About</h1>
+<p>소개 페이지</p>
+<!-- 로그인 페이지 이동-->
+<% if (userId) { %>
+  <form action="/auth/logout" method="POST">
+    <button type="submit">로그아웃</button>
+  </form>
+<% } %>
+<!-- 로그아웃 -->
+ <% if (!userId) { %>
+  <a href="/auth/login">로그인</a>
+  <a href="/auth/signup">회원가입</a>
+<% } %>
+
