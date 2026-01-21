@@ -39,6 +39,6 @@ app.use("/auth",require("./routes/auth"));
 
 // 서버 실행 (✅ listen은 딱 한 번만)
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
