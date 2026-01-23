@@ -7,7 +7,37 @@
 </form>
 
 <!-- 수정 페이지 이동-->
-<a href="/posts/<%= post.post_num %>/edit">수정</a>
+<a href="/posts/<%= post.post_num %>/edit">수정</a><br>
+
+<!-- 댓글 작성 폼--> 
+<form action="/posts/<%= post.post_num %>/comment" method="POST">
+  <textarea name ="content" placeholder="댓글을 작성해주세요."></textarea>
+  <button type="submit"> 작성 </button>
+</form>
+
+<!--댓글목록-->
+<h3>댓글</h3>
+
+<%if(comments.length===0){%>
+    <p>아직 작성된 댓글이 없습니다.</p>
+  <% } %>
+<ul>
+  <% comments.forEach(comment => { %>
+    <li>
+      <p>
+        <%= comment.user_name %>
+        <%= comment.content %><br>
+        <small><%= comment.created_at %></small>
+      </p>
+
+      <% if (Number(comment.id) === Number(userId) ){ %>
+        <form action="/posts/<%= comment.comments_num %>/comment_delete" method="POST">
+          <button type="submit">삭제</button>
+        </form>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>
 
 <!-- 글 목록 페이지로 이동-->
 <a href="/posts">목록으로 돌아가기</a>

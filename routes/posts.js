@@ -26,9 +26,12 @@ router.get('/new',requireLogin,(req,res)=>{
 router.get('/:id', async(req, res) => {
   const sql = "SELECT post_num,user_id,title,created_at,content FROM posts WHERE post_num=?"
   const [rows] = await pool.query(sql,[req.params.id]);
-if(rows.length === 0)
-  return 404;
-res.render('post-detail',{post: rows[0]});
+  if(rows.length === 0) return res.sendStatus(404);
+  const sql2 = "SELECT  comments.content, comments.created_at, comments.comments_num ,users.user_name , users.id FROM comments JOIN users on comments.user_id = users.id WHERE comments.post_id = ? ORDER BY comments.created_at ASC;"
+  const [comments] = await pool.query(sql2,[req.params.id]);
+  console.log(comments[0]);
+
+  res.render('post-detail',{post: rows[0],comments});
 });
 
 //POST 요청 받아서 새 글 불러오기!! o 
@@ -103,4 +106,47 @@ router.post('/:id/edit',requireLogin, async(req, res) => {
   }
 });
 
+//댓글 작성하기 
+router.post('/:id/comment',requireLogin, async(req,res)=>{
+  
+  const content = req.body.content;
+  const post_id = req.params.id;
+  const user_id = req.session.userId;
+
+  const sql = "INSERT INTO comments (content, post_id, user_id) VALUES (?, ?, ?)";
+
+  await pool.query(sql,[content, post_id,user_id]);
+
+  return res.redirect(`/posts/${post_id}`);
+ 
+})
+
+//댓글 삭제하기 
+router.post('/:comments_num/comment_delete',requireLogin, async(req,res)=>{
+  
+  const comments_num = req.params.comments_num;
+  const sql = "SELECT user_id, post_id FROM comments WHERE comments_num =?" ;
+
+  const [comment] = await pool.query(sql, [comments_num]);
+
+  if(comment.length ===0)
+    return res.status(404).send("해당하는 댓글이 존재하지 않습니다.");
+  try{
+    if(Number(comment[0].user_id) === Number(req.session.userId)){
+      const sql ="DELETE FROM comments WHERE comments_num = ?";
+      await pool.query(sql, [comments_num]);
+      const result = await pool.query(sql, [comments_num]);
+      console.log("DELETE RESULT:", result[0]);
+
+      return res.redirect(`/posts/${comment[0].post_id}`);
+    }else{
+      return res.sendStatus(403);
+    }
+}catch(err) {
+    console.error("SIGNUP ERROR >>",err);
+    console.error("SIGNUP ERROR CODE>>",err.code);
+    console.error("SIGNUP ERROR MSG >>",err.message);
+    return res.redirect(`/posts/${comment[0].post_id}`);
+    }
+})
 module.exports = router;

@@ -16,6 +16,7 @@ app.use(
     saveUninitialized:false,
   })
 );
+
 // ejs 설정
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -25,11 +26,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ 임시 DB 연결 테스트 라우트 (여기에 추가)
+// railwayDB연결 
 app.get("/db-test", async (req, res) => {
-  const [rows] = await pool.query("SELECT 1 AS ok");
-  res.json(rows);
+  try {
+    const [rows] = await pool.query("SELECT 1 AS ok");
+    res.json(rows);
+  } catch (err) {
+    console.error("DB TEST ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 // 라우터 연결
 app.use("/", require("./routes/index"));
