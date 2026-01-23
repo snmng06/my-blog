@@ -6,15 +6,5 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  port: Number(process.env.MYSQLPORT || 3306),
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
-
-module.exports = pool;
+const pool = mysql.createPool(process.env.MYSQL_URL);
+module.exports = pool
