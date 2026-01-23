@@ -125,7 +125,7 @@ router.post('/:id/comment',requireLogin, async(req,res)=>{
 router.post('/:comments_num/comment_delete',requireLogin, async(req,res)=>{
   
   const comments_num = req.params.comments_num;
-  const sql = "SELECT user_id, post_id FROM comments WHERE comments_num =?" ;
+  const sql = "SELECT user_id, post_num FROM comments WHERE comments_num =?" ;
 
   const [comment] = await pool.query(sql, [comments_num]);
 
