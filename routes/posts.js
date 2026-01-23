@@ -27,7 +27,7 @@ router.get('/:id', async(req, res) => {
   const sql = "SELECT post_num,user_id,title,created_at,content FROM posts WHERE post_num=?"
   const [rows] = await pool.query(sql,[req.params.id]);
   if(rows.length === 0) return res.sendStatus(404);
-  const sql2 = "SELECT  comments.content, comments.created_at, comments.comments_num ,users.user_name , users.id FROM comments JOIN users on comments.user_id = users.id WHERE comments.post_id = ? ORDER BY comments.created_at ASC;"
+  const sql2 = "SELECT  comments.content, comments.created_at, comments.comments_num ,users.user_name , users.id FROM comments JOIN users on comments.user_id = users.id WHERE comments.post_num = ? ORDER BY comments.created_at ASC;"
   const [comments] = await pool.query(sql2,[req.params.id]);
   console.log(comments[0]);
 
@@ -113,7 +113,7 @@ router.post('/:id/comment',requireLogin, async(req,res)=>{
   const post_id = req.params.id;
   const user_id = req.session.userId;
 
-  const sql = "INSERT INTO comments (content, post_id, user_id) VALUES (?, ?, ?)";
+  const sql = "INSERT INTO comments (content, post_num, user_id) VALUES (?, ?, ?)";
 
   await pool.query(sql,[content, post_id,user_id]);
 
@@ -138,7 +138,7 @@ router.post('/:comments_num/comment_delete',requireLogin, async(req,res)=>{
       const result = await pool.query(sql, [comments_num]);
       console.log("DELETE RESULT:", result[0]);
 
-      return res.redirect(`/posts/${comment[0].post_id}`);
+      return res.redirect(`/posts/${comment[0].post_num}`);
     }else{
       return res.sendStatus(403);
     }
@@ -146,7 +146,7 @@ router.post('/:comments_num/comment_delete',requireLogin, async(req,res)=>{
     console.error("SIGNUP ERROR >>",err);
     console.error("SIGNUP ERROR CODE>>",err.code);
     console.error("SIGNUP ERROR MSG >>",err.message);
-    return res.redirect(`/posts/${comment[0].post_id}`);
+    return res.redirect(`/posts/${comment[0].post_num}`);
     }
 })
 module.exports = router;
